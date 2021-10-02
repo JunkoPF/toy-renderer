@@ -27,8 +27,8 @@ public:
         Vector3d look_dir = Normalize(look_at_pos_ - view_pos_);
 
         w_ = look_dir;
-        u_ = Normalize(CrossProduct3D(w_, up_dir));
-        v_ = CrossProduct3D(u_, w_);
+        u_ = Normalize(CrossProduct(w_, up_dir));
+        v_ = CrossProduct(u_, w_);
 
         horizontal_ = u_ * viewport_width * focus_dist;
         vertical_ = v_ * viewport_height * focus_dist;

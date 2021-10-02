@@ -200,7 +200,7 @@ namespace Util {
 
     // Vector cross product
     template <typename _elem_type>
-    Base::Matrix<_elem_type, 3, 1> CrossProduct3D(const Base::Matrix<_elem_type, 3, 1> &lhs, const Base::Matrix<_elem_type, 3, 1> &rhs) {
+    Base::Matrix<_elem_type, 3, 1> CrossProduct(const Base::Matrix<_elem_type, 3, 1> &lhs, const Base::Matrix<_elem_type, 3, 1> &rhs) {
         return {
         lhs.y() * rhs.z() - lhs.z() * rhs.y(),
         lhs.z() * rhs.x() - lhs.x() * rhs.z(),

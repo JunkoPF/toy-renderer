@@ -29,7 +29,7 @@ int main() {
 
     // Render
 
-    Renderer renderer(400, 16.0 / 9.0, 100, 50);
+    Renderer renderer(400, 16.0 / 9.0, 50, 50);
 
     scene.Render(std::cout, renderer);
 
