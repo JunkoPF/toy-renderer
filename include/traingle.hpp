@@ -18,7 +18,7 @@ private:
 };
 
 Intersection Traingle::Intersect(const Ray &r, double t_min, double t_max) const {
-    // using Moller Trumbore Algorithm to get 
+    // using Moller Trumbore Algorithm to get
     Intersection ret_intersection;
     if (DotProduct(ray.direction(), normal_) > 0) return inter;
     double u, v, t_tmp = 0;
@@ -34,17 +34,19 @@ Intersection Traingle::Intersect(const Ray &r, double t_min, double t_max) const
     v = DotProduct(ray.direction(), qvec) * det_inv;
     if (v < 0 || u + v > 1) return inter;
     t_tmp = DotProduct(edges_[1], qvec) * det_inv;
-    if (t_tmp < 0) return inter;
+    if (t_tmp <= t_min || t_tmp >= t_max) return inter;
     // TODO find ray triangle intersection
 
-    inter.happened = true;
-    inter.coords = r(t_tmp);
-    inter.distance = t_tmp;
-    inter.normal = this->normal;
-    inter.obj = this;
-    inter.m = this->m;
+    inter.happened_ = true;
+    inter.p_ = r.at(t_tmp);
+    inter.t_ = t_tmp;
+    inter.normal_ = this->normal;
 
     return inter;
+}
+
+BoundingBox Triangle::GetBoundingBox() const {
+    return MergeBox(BoundingBox(vertex_coords_[0], vertex_coords_[1]), BoudingBox(vertex_coords_[2]));
 }
 
 #endif

@@ -6,7 +6,11 @@
 class BoundingBox {
 public:
     BoundingBox() : min_(0, 0, 0), max_(0, 0, 0) {}
-    BoundingBox(const Point3d &min, const Point3d &max) : min_(min), max_(max) {}
+    BoundingBox(const Point3d &p) : min_(p), max_(p) {}
+    BoundingBox(const Point3d &p1, const Point3d &p2) {
+        min_ = Vector3d(fmin(p1.x(), p2.x()), fmin(p1.y(), p2.y()), fmin(p1.z(), p2.z()));
+        max_ = Vector3d(fmax(p1.x(), p2.x()), fmax(p1.y(), p2.y()), fmax(p1.z(), p2.z()));
+    }
 
     const Point3d &min() const { return min_; }
     const Point3d &max() const { return max_; }
