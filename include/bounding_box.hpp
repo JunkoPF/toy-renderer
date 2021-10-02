@@ -26,7 +26,7 @@ public:
             }
             t_min = fmax(t0, t_min);
             t_max = fmin(t1, t_max);
-            if (t_max <= t_min) {
+            if (t_max < t_min) {
                 return false;
             }
         }

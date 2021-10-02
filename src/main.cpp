@@ -6,6 +6,7 @@
 #include "renderer.hpp"
 #include "scene.hpp"
 #include "sphere.hpp"
+#include "traingle.hpp"
 
 int main() {
     // Scene
@@ -17,10 +18,14 @@ int main() {
     auto material_right = make_shared<Metal>(Color3d(0.8, 0.6, 0.2), 0.0);
 
     scene.AddObject(make_shared<Sphere>(Point3d(0.0, -100.5, -1.0), 100.0, material_ground));
-    scene.AddObject(make_shared<Sphere>(Point3d(0.0, 0.0, -1.0), 0.5, material_center));
-    scene.AddObject(make_shared<Sphere>(Point3d(-1.0, 0.0, -1.0), 0.5, material_left));
-    scene.AddObject(make_shared<Sphere>(Point3d(-1.0, 0.0, -1.0), -0.45, material_left));
-    scene.AddObject(make_shared<Sphere>(Point3d(1.0, 0.0, -1.0), 0.5, material_right));
+    //scene.AddObject(make_shared<Sphere>(Point3d(0.0, 0.0, -1.0), 0.5, material_center));
+    //scene.AddObject(make_shared<Sphere>(Point3d(-1.0, 0.0, -1.0), 0.5, material_left));
+    //scene.AddObject(make_shared<Sphere>(Point3d(-1.0, 0.0, -1.0), -0.45, material_left));
+    //scene.AddObject(make_shared<Sphere>(Point3d(1.0, 0.0, -1.0), 0.5, material_right));
+    scene.AddObject(make_shared<Triangle>(Point3d(-1.0, -1.0, -1.0),
+                                          Point3d(1.0, -1.0, -1.0),
+                                          Point3d(0.0, 1.0, -1.0),
+                                          material_center));
     // Camera
 
     Camera cam(Point3d(0, 0, 1), Point3d(0, 0, -1), Vector3d(0, 1, 0), 45.0, 16.0 / 9.0, Length(Point3d(0, 0, 1) - Point3d(0, 0, -1)), 0.0);
