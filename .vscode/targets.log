@@ -1,4 +1,6 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+ 
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -6,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sun Oct  3 13:03:51 2021
+# Make data base, printed on Sun Oct  3 13:50:45 2021
 
 # Variables
 
@@ -49,6 +51,7 @@ VSCODE_CWD = /mnt/d/programs/Microsoft VS Code
 # environment
 AM_HOME = /home/polyethylene/jyyos/os-workbench/abstract-machine
 # default
+ 
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
 PATH = /home/polyethylene/.vscode-server/bin/7f6ab5485bbc008386c4386d08766667e155244e/bin:/home/polyethylene/.nvm/versions/node/v14.17.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/mnt/c/Python39/Scripts/:/mnt/c/Python39/:/mnt/d/programs/python/Scripts/:/mnt/d/programs/python/:/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.0/bin:/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.0/libnvvp:/mnt/d/programs/java/openj9/bin:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/d/programs/java/oraclej/bin:/mnt/d/programs/TDM-GCC/bin:/mnt/d/programs/LLVM/bin:/mnt/c/Program Files/Pandoc/:/mnt/e/programs/MATLAB/runtime/win64:/mnt/e/programs/MATLAB/bin:/mnt/c/Program Files/Common Files/Autodesk Shared/:/mnt/c/Program Files/NVIDIA Corporation/Nsight Compute 2020.1.0/:/mnt/d/programs/Git/cmd:/mnt/c/Program Files (x86)/Wolfram Research/WolframScript/:/mnt/c/Program Files/nodejs/:/mnt/c/ProgramData/chocolatey/bin:/mnt/e/programs/Anaconda3/Scripts:/mnt/e/programs/Anaconda3:/mnt/e/programs/Graphviz/bin:/mnt/e/programs/Graphviz/bin/dot.exe:/mnt/c/Users/polyethylene/AppData/Local/Microsoft/WindowsApps:/mnt/d/programs/Microsoft VS Code/bin:/mnt/e/programs/texlive/2019/bin/win32:/mnt/d/programs/refprop/:/mnt/c/Users/polyethylene/AppData/Roaming/npm:/mnt/e/programs/Graphviz/bin:/usr/local/go/bin
@@ -79,13 +82,11 @@ WSL_INTEROP = /run/WSL/13_interop
 # environment
 PKG_CONFIG_PATH = :/usr/local/lib/pkgconfig
 # environment
- 
-make: *** No rule to make target 'all'.  Stop.
- 
 VSCODE_AMD_ENTRYPOINT = vs/server/remoteExtensionHostProcess
 # environment
 HOME = /home/polyethylene
 # environment
+ 
 LOGNAME = polyethylene
 # environment
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
@@ -109,6 +110,7 @@ SHLVL = 0
 MAKE_VERSION := 4.2.1
 # environment
 USER = polyethylene
+ 
 # makefile
 .DEFAULT_GOAL := main
 # environment
@@ -142,6 +144,7 @@ NVM_DIR = /home/polyethylene/.nvm
 # automatic
 +F = $(notdir $+)
 # default
+ 
 MAKEFILES := 
 # automatic
 <F = $(notdir $<)
@@ -198,7 +201,7 @@ all:
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
-#  Last modified 2021-10-03 13:03:42.85
+#  Last modified 2021-10-03 13:50:30.61
 #  File has been updated.
 #  Successfully updated.
 
@@ -236,6 +239,6 @@ main: src/main.cpp
 # strcache performance: lookups = 25 / hit rate = 20%
 # hash-table stats:
 # Load=20/8192=0%, Rehash=0, Collisions=1/25=4%
-# Finished Make data base on Sun Oct  3 13:03:51 2021
+# Finished Make data base on Sun Oct  3 13:50:45 2021
 
  

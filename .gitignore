@@ -1,3 +1,4 @@
-*.ppm
-*.o
+/*.ppm
+/*.o
 asset
+.vscode
