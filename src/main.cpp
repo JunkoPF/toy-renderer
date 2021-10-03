@@ -12,11 +12,6 @@ int main() {
     // Scene
     Scene scene;
 
-    auto material_ground = make_shared<Lambertian>(Color3d(0.8, 0.8, 0.0));
-    auto material_center = make_shared<Lambertian>(Color3d(0.1, 0.2, 0.5));
-    auto material_left = make_shared<Dielectric>(1.5);
-    auto material_right = make_shared<Metal>(Color3d(0.8, 0.0, 0.8), 0.0);
-
     //scene.AddObject(make_shared<Sphere>(Point3d(0.0, -100.5, -1.0), 100.0, material_ground));
     //scene.AddObject(make_shared<Sphere>(Point3d(0.0, 0.0, -1.0), 0.5, material_center));
     //scene.AddObject(make_shared<Sphere>(Point3d(-1.0, 0.0, -1.0), 0.5, material_left));
@@ -27,23 +22,38 @@ int main() {
     //                                       Point3d(0.0, 1.0, -1.0),
     //                                           material_center));
 
-    auto list = LoadObjModel("/home/polyethylene/toyRenderer/asset/bunny/bunny.obj", material_center);
+    auto material_floor = make_shared<Lambertian>(Color3d(0.3, 0.3, 0.3));
+    auto material_left = make_shared<Metal>(Color3d(0.2, 0.2, 0.8), 0.1);
+    auto material_right = make_shared<Lambertian>(Color3d(0.8, 0.2, 0.2));
+    auto material_shortbox = make_shared<Metal>(Color3d(0.2, 0.8, 0.8), 0.1);
+    auto material_tallbox = make_shared<Lambertian>(Color3d(0.1, 0.6, 0.1));
 
-    scene.AddObject(list[0]);
+    auto list = LoadObjModel("/home/polyethylene/toyRenderer/asset/cornellbox/floor.obj", material_floor);
+    auto tmp = LoadObjModel("/home/polyethylene/toyRenderer/asset/cornellbox/left.obj", material_left);
+    list.insert(list.end(), tmp.begin(), tmp.end());
+    tmp = LoadObjModel("/home/polyethylene/toyRenderer/asset/cornellbox/right.obj", material_right);
+    list.insert(list.end(), tmp.begin(), tmp.end());
+    tmp = LoadObjModel("/home/polyethylene/toyRenderer/asset/cornellbox/shortbox.obj", material_shortbox);
+    list.insert(list.end(), tmp.begin(), tmp.end());
+    tmp = LoadObjModel("/home/polyethylene/toyRenderer/asset/cornellbox/tallbox.obj", material_tallbox);
+    list.insert(list.end(), tmp.begin(), tmp.end());
+    for (auto &elem : list) {
+        scene.AddObject(elem);
+    }
 
     // Camera
-    Point3d view_point(0, 5, 15);
-    Point3d look_at_point(0, 5, -1);
-    double fov = 50.0;
-    double aspect_ratio = 4.0 / 3.0;
+    Point3d view_point(278, 273, -550);
+    Point3d look_at_point(278, 273, 0);
+    double fov = 20.0;
+    double aspect_ratio = 1.0;
 
-    Camera cam(view_point, look_at_point, Vector3d(0, 1, 0), 50.0, aspect_ratio, Length(view_point - look_at_point), 0.0);
+    Camera cam(view_point, look_at_point, Vector3d(0, 1, 0), 50.0, aspect_ratio, 0.035, 0.0);
 
     scene.SetCamera(cam);
 
     // Render
 
-    Renderer renderer(800, aspect_ratio, 50, 10);
+    Renderer renderer(400, aspect_ratio, 100, 50);
     scene.Render(std::cout, renderer);
 
     std::cerr << "\nDone.\n";

@@ -61,7 +61,7 @@ public:
             std::cerr << "\rFinish threads num: " << ++cnt << std::flush;
         };
 
-        int block_width = 20, block_height = 20;
+        int block_width = 25, block_height = 25;
         int block_size_x = image_height_ / block_height;
         int block_size_y = image_width_ / block_width;
 

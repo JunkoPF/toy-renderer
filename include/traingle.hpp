@@ -76,8 +76,7 @@ public:
             for (int j = 0; j < 3; ++j) {
                 Vector3d vertex = Vector3d(mesh.Vertices[i + j].Position.X,
                                            mesh.Vertices[i + j].Position.Y,
-                                           mesh.Vertices[i + j].Position.Z) *
-                                  60.0;
+                                           mesh.Vertices[i + j].Position.Z);
                 face_vertices[j] = vertex;
 
                 min_vertex = Vector3d(fmin(min_vertex.x(), vertex.x()), fmin(min_vertex.y(), vertex.y()), fmin(min_vertex.z(), vertex.z()));
