@@ -35,14 +35,15 @@ int main() {
     Point3d view_point(0, 5, 15);
     Point3d look_at_point(0, 5, -1);
     double fov = 50.0;
+    double aspect_ratio = 4.0 / 3.0;
 
-    Camera cam(view_point, look_at_point, Vector3d(0, 1, 0), 50.0, 16.0 / 9.0, Length(view_point - look_at_point), 0.0);
+    Camera cam(view_point, look_at_point, Vector3d(0, 1, 0), 50.0, aspect_ratio, Length(view_point - look_at_point), 0.0);
 
     scene.SetCamera(cam);
 
     // Render
 
-    Renderer renderer(400, 16.0 / 9.0, 1, 10);
+    Renderer renderer(800, aspect_ratio, 50, 10);
     scene.Render(std::cout, renderer);
 
     std::cerr << "\nDone.\n";
