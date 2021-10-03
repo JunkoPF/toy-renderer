@@ -1,4 +1,4 @@
-*.ppm
-*.o
+output.ppm
+renderer.o
 asset
 .vscode
