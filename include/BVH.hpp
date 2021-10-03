@@ -41,7 +41,13 @@ BvhNode::BvhNode(const std::vector<ObjectPtrType> &objects, size_t begin_index, 
     if (num_objects == 1) {
         object_ = objects[begin_index];
     } else {
-        size_t axis = static_cast<size_t>(TrRandom::Double(0.0, 3.0 - eps));
+        BoundingBox centroid_box(objects[begin_index]->GetBoundingBox().Centroid());
+        for (int i = begin_index + 1; i < end_index; ++i) {
+            centroid_box = MergeBoxes(centroid_box, BoundingBox(objects[i]->GetBoundingBox().Centroid()));
+        }
+
+        size_t axis = MaxDim(centroid_box);
+
         std::sort(
         tmp_objects.begin() + begin_index, tmp_objects.begin() + end_index,
         [&axis](ObjectPtrType &a, ObjectPtrType &b) {
@@ -89,10 +95,10 @@ Intersection BvhTree::CheckIntersect(const Ray &r, double t_min, double t_max) c
                     ret_intersection = cur_intersection;
                 }
             } else {
-                if (cur_node->left_) {
+                if (cur_node->left_->GetBox().Check(r, t_min, t_max)) {
                     node_queue.push(cur_node->left_);
                 }
-                if (cur_node->right_) {
+                if (cur_node->right_->GetBox().Check(r, t_min, t_max)) {
                     node_queue.push(cur_node->right_);
                 }
             }

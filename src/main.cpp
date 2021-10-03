@@ -15,7 +15,7 @@ int main() {
     auto material_ground = make_shared<Lambertian>(Color3d(0.8, 0.8, 0.0));
     auto material_center = make_shared<Lambertian>(Color3d(0.1, 0.2, 0.5));
     auto material_left = make_shared<Dielectric>(1.5);
-    auto material_right = make_shared<Metal>(Color3d(0.8, 0.6, 0.2), 0.0);
+    auto material_right = make_shared<Metal>(Color3d(0.8, 0.0, 0.8), 0.0);
 
     //scene.AddObject(make_shared<Sphere>(Point3d(0.0, -100.5, -1.0), 100.0, material_ground));
     //scene.AddObject(make_shared<Sphere>(Point3d(0.0, 0.0, -1.0), 0.5, material_center));
@@ -32,15 +32,17 @@ int main() {
     scene.AddObject(list[0]);
 
     // Camera
+    Point3d view_point(0, 5, 15);
+    Point3d look_at_point(0, 5, -1);
+    double fov = 50.0;
 
-    Camera cam(Point3d(0, 5, 20), Point3d(0, 5, -1), Vector3d(0, 1, 0), 70.0, 16.0 / 9.0, Length(Point3d(0, 5, 20) - Point3d(0, 5, -1)), 0.0);
+    Camera cam(view_point, look_at_point, Vector3d(0, 1, 0), 50.0, 16.0 / 9.0, Length(view_point - look_at_point), 0.0);
 
     scene.SetCamera(cam);
 
     // Render
 
-    Renderer renderer(800, 16.0 / 9.0, 10, 5);
-    scene.InitializeBvh();
+    Renderer renderer(400, 16.0 / 9.0, 1, 10);
     scene.Render(std::cout, renderer);
 
     std::cerr << "\nDone.\n";

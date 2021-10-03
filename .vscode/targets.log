@@ -1,6 +1,4 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
-make: *** No rule to make target 'all'.  Stop.
- 
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -8,7 +6,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sun Oct  3 11:09:30 2021
+# Make data base, printed on Sun Oct  3 13:03:51 2021
 
 # Variables
 
@@ -81,6 +79,9 @@ WSL_INTEROP = /run/WSL/13_interop
 # environment
 PKG_CONFIG_PATH = :/usr/local/lib/pkgconfig
 # environment
+ 
+make: *** No rule to make target 'all'.  Stop.
+ 
 VSCODE_AMD_ENTRYPOINT = vs/server/remoteExtensionHostProcess
 # environment
 HOME = /home/polyethylene
@@ -197,7 +198,7 @@ all:
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
-#  Last modified 2021-10-02 22:57:00.62
+#  Last modified 2021-10-03 13:03:42.85
 #  File has been updated.
 #  Successfully updated.
 
@@ -218,7 +219,7 @@ main: src/main.cpp
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'makefile', line 2):
-	g++ -g src/main.cpp -o renderer.o -I include/ -std=c++17
+	g++ -g src/main.cpp -o renderer.o -I include/ -std=c++17 -pthread
 	./renderer.o > output.ppm
 
 # files hash-table stats:
@@ -235,6 +236,6 @@ main: src/main.cpp
 # strcache performance: lookups = 25 / hit rate = 20%
 # hash-table stats:
 # Load=20/8192=0%, Rehash=0, Collisions=1/25=4%
-# Finished Make data base on Sun Oct  3 11:09:30 2021
+# Finished Make data base on Sun Oct  3 13:03:51 2021
 
  

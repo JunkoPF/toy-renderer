@@ -33,8 +33,11 @@ public:
         return true;
     }
 
-private:
+    Point3d Centroid() const {
+        return (min_ + max_) / 2.0;
+    }
 
+private:
     Point3d min_;
     Point3d max_;
 };
