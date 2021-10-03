@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat Oct  2 10:36:48 2021
+# Make data base, printed on Sun Oct  3 11:09:30 2021
 
 # Variables
 
@@ -61,7 +61,7 @@ NVM_BIN = /home/polyethylene/.nvm/versions/node/v14.17.0/bin
 # environment
 VSCODE_LOG_STACK = false
 # environment
-VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-a27795d0-cd05-4c91-a560-da31967f4229.sock
+VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-3c134853-14ca-45f2-ac25-4e0944ea5ed9.sock
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -69,7 +69,7 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # automatic
 %F = $(notdir $%)
 # environment
-DISPLAY = 172.17.123.113:0
+DISPLAY = 172.17.107.97:0
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
@@ -177,9 +177,9 @@ WSL_DISTRO_NAME = Ubuntu-20.04
 
 # Directories
 
-# . (device 2064, inode 92748): 11 files, no impossibilities.
+# . (device 2064, inode 92748): 13 files, no impossibilities.
 
-# 11 files, no impossibilities in 1 directories.
+# 13 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -197,7 +197,7 @@ all:
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
-#  Last modified 2021-09-30 22:48:05.39
+#  Last modified 2021-10-02 22:57:00.62
 #  File has been updated.
 #  Successfully updated.
 
@@ -218,7 +218,7 @@ main: src/main.cpp
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'makefile', line 2):
-	g++ -g src/main.cpp -o renderer.o -I include/
+	g++ -g src/main.cpp -o renderer.o -I include/ -std=c++17
 	./renderer.o > output.ppm
 
 # files hash-table stats:
@@ -229,12 +229,12 @@ main: src/main.cpp
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 18 / storage = 149 B / avg = 8 B
-# current buf: size = 8162 B / used = 149 B / count = 18 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 20 / storage = 165 B / avg = 8 B
+# current buf: size = 8162 B / used = 165 B / count = 20 / avg = 8 B
 
-# strcache performance: lookups = 23 / hit rate = 21%
+# strcache performance: lookups = 25 / hit rate = 20%
 # hash-table stats:
-# Load=18/8192=0%, Rehash=0, Collisions=1/23=4%
-# Finished Make data base on Sat Oct  2 10:36:48 2021
+# Load=20/8192=0%, Rehash=0, Collisions=1/25=4%
+# Finished Make data base on Sun Oct  3 11:09:30 2021
 
  

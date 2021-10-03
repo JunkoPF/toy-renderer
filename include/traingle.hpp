@@ -2,8 +2,15 @@
 #define TR_INCLUDE_TRIANGLE_H
 
 #include <array>
+#include <string>
 
+#include "BVH.hpp"
+#include "OBJ_Loader.hpp"
+#include "base.hpp"
+#include "bounding_box.hpp"
+#include "material.hpp"
 #include "object.hpp"
+#include "object_list.hpp"
 
 class Triangle : public Object {
 public:
@@ -56,6 +63,72 @@ Intersection Triangle::Intersect(const Ray &r, double t_min, double t_max) const
 
 BoundingBox Triangle::GetBoundingBox() const {
     return MergeBoxes(BoundingBox(vertex_coords_[0], vertex_coords_[1]), BoundingBox(vertex_coords_[2]));
+}
+
+class MeshTriangle : public Object {
+public:
+    MeshTriangle(const objl::Mesh &mesh, shared_ptr<Material> material) {
+        Vector3d min_vertex = Vector3d{infinity, infinity, infinity};
+        Vector3d max_vertex = Vector3d{-infinity, -infinity, -infinity};
+
+        for (int i = 0; i < mesh.Vertices.size(); i += 3) {
+            std::array<Vector3d, 3> face_vertices;
+            for (int j = 0; j < 3; ++j) {
+                Vector3d vertex = Vector3d(mesh.Vertices[i + j].Position.X,
+                                           mesh.Vertices[i + j].Position.Y,
+                                           mesh.Vertices[i + j].Position.Z) *
+                                  60.0;
+                face_vertices[j] = vertex;
+
+                min_vertex = Vector3d(fmin(min_vertex.x(), vertex.x()), fmin(min_vertex.y(), vertex.y()), fmin(min_vertex.z(), vertex.z()));
+                max_vertex = Vector3d(fmax(max_vertex.x(), vertex.x()), fmax(max_vertex.y(), vertex.y()), fmax(max_vertex.z(), vertex.z()));
+            }
+
+            triangles_.emplace_back(make_shared<Triangle>(face_vertices[0], face_vertices[1], face_vertices[2], material));
+        }
+
+        box_ = BoundingBox(min_vertex, max_vertex);
+
+        ObjectList list;
+
+        for (auto &tri : triangles_) {
+            list.add(tri);
+        }
+
+        bvh_tree_ = Bvh::BvhTree(list);
+    }
+
+    virtual Intersection Intersect(const Ray &r, double t_min, double t_max) const override;
+    virtual BoundingBox GetBoundingBox() const override;
+
+public:
+    std::vector<shared_ptr<Triangle>> triangles_;
+
+    BoundingBox box_;
+
+    Bvh::BvhTree bvh_tree_;
+};
+
+Intersection MeshTriangle::Intersect(const Ray &r, double t_min, double t_max) const {
+    return bvh_tree_.CheckIntersect(r, t_min, t_max);
+};
+
+BoundingBox MeshTriangle::GetBoundingBox() const {
+    return box_;
+};
+
+std::vector<shared_ptr<MeshTriangle>> LoadObjModel(std::string filename, shared_ptr<Material> material) {
+    objl::Loader loader;
+    loader.LoadFile(filename);
+    auto meshes = loader.LoadedMeshes;
+
+    std::vector<shared_ptr<MeshTriangle>> mesh_list;
+
+    for (auto &mesh : meshes) {
+        mesh_list.emplace_back(make_shared<MeshTriangle>(mesh, material));
+    }
+
+    return mesh_list;
 }
 
 #endif

@@ -31,12 +31,6 @@ public:
         }
     }
 
-private:
-    int image_width_;
-    int image_height_;
-    int samples_per_pixel_;
-    int max_depth_;
-
     Color3d CastRay(const Ray &r, const Bvh::BvhTree &bvh, int depth) const {
         Intersection rec;
 
@@ -59,6 +53,12 @@ private:
         auto t = 0.5 * (dir.y() + 1.0);
         return (1.0 - t) * Color3d(1.0, 1.0, 1.0) + t * Color3d(0.5, 0.7, 1.0);
     }
+
+private:
+    int image_width_;
+    int image_height_;
+    int samples_per_pixel_;
+    int max_depth_;
 };
 
 #endif

@@ -69,7 +69,7 @@ public:
 
     Intersection CheckIntersect(const Ray &r, double t_min, double t_max) const;
 
-private:
+public:
     NodePtrType root_;
 };
 

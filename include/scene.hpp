@@ -11,8 +11,8 @@ public:
     Scene() {}
     Scene(Camera cam) : camera_(cam), initialized_(false) {}
 
-    void AddObject(const shared_ptr<Object> &object_ptr) {
-        list_.objects_.emplace_back(object_ptr);
+    void AddObject(shared_ptr<Object> object_ptr) {
+        list_.add(object_ptr);
         initialized_ = false;
     }
 
@@ -27,12 +27,16 @@ public:
         camera_ = cam_;
     }
 
-private:
     void InitializeBvh() {
         bvh_tree_ = Bvh::BvhTree(list_);
         initialized_ = true;
     }
 
+    Bvh::BvhTree GetBvhTree() {
+        return bvh_tree_;
+    }
+
+public:
     ObjectList list_;
     Bvh::BvhTree bvh_tree_;
     Camera camera_;

@@ -34,6 +34,7 @@ public:
     }
 
 private:
+
     Point3d min_;
     Point3d max_;
 };

@@ -1,6 +1,6 @@
 make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/home/polyethylene/toyRenderer'
-g++ -g src/main.cpp -o renderer.o -I include/
+g++ -g src/main.cpp -o renderer.o -I include/ -std=c++17
 ./renderer.o > output.ppm
 make: Leaving directory '/home/polyethylene/toyRenderer'
  
