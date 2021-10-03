@@ -89,26 +89,42 @@ public:
     }
 
     Color3d CastRay(const Ray &r, const Bvh::BvhTree &bvh, int depth) const {
-        Intersection rec;
+        Intersection inter;
 
-        if (depth <= 0) {
+        inter = bvh.CheckIntersect(r, 0.001, infinity);
+
+        if (!inter.happened_) {
             return {0, 0, 0};
         }
 
-        rec = bvh.CheckIntersect(r, 0.001, infinity);
-
-        if (rec.happened_) {
-            Ray scattered;
-            Color3d attenuation;
-            if (rec.material_->scatter(r, rec, attenuation, scattered)) {
-                Color3d ret = HadamardProduct(attenuation, CastRay(scattered, bvh, depth - 1));
-                return ret;
-            }
-            return Color3d(0, 0, 0);
+        // if hit light direction
+        if (inter.material_->HasEmission()) {
+            return inter.material_->GetEmission();
         }
-        Vector3d dir = Normalize(r.direction());
-        auto t = 0.5 * (dir.y() + 1.0);
-        return (1.0 - t) * Color3d(1.0, 1.0, 1.0) + t * Color3d(0.5, 0.7, 1.0);
+
+        Vector3d p = inter.p_;
+        Vector3d N = inter.normal_;
+        Vector3d w_o = r.direction();
+
+        Vector3d L_dir{0, 0, 0}, L_indir{0, 0, 0};
+        // TO DO: sample from light
+
+        // Russian Roulette
+        if (TrRandom::Double() <= russian_roulette) {
+            Vector3d w_i = inter.material_->Sample(w_o, N);
+            Ray next_ray(p, w_i);
+
+            Intersection next_inter = bvh.CheckIntersect(next_ray, 0.001, infinity);
+            if (next_inter.happened_ && !next_inter.material_->HasEmission) {
+                double pdf = inter.material_->Pdf(w_o, w_i, N);
+                if (pdf > eps) {
+                    Vector3d
+                    L_indir = CastRay(next_ray, bvh, depth + 1) * fr * DotProduct(w_i, N) / pdf / russian_roulette;
+                }
+            }
+        }
+
+        return L_dir + L_indir;
     }
 
 private:
@@ -116,6 +132,8 @@ private:
     int image_height_;
     int samples_per_pixel_;
     int max_depth_;
+
+    static const double russian_roulette = 0.8;
 };
 
 #endif

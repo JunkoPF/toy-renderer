@@ -44,17 +44,6 @@ inline bool nearzero(const Vector3d &vec) {
     return (fabs(vec.x()) < eps) && (fabs(vec.y()) < eps) && (fabs(vec.z()) < eps);
 }
 
-inline Vector3d reflect(const Vector3d &in_dir, const Vector3d &normal) {
-    return Normalize(in_dir - 2 * DotProduct(in_dir, normal) * normal);
-}
-
-inline Vector3d refract(const Vector3d &in_dir, const Vector3d &normal, double refract_ratio) {
-    double cos_theta = DotProduct(in_dir, -normal);
-    Vector3d r_out_perp = refract_ratio * (in_dir + cos_theta * normal);
-    Vector3d r_out_vert = -sqrt(1 - LengthSquared(r_out_perp)) * normal;
-    return r_out_perp + r_out_vert;
-}
-
 // random function
 
 namespace TrRandom {
