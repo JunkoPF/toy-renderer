@@ -11,6 +11,8 @@
 
 std::mutex mutex_ins;
 
+const double russian_roulette = 0.8;
+
 class Renderer {
 public:
     Renderer() {}
@@ -104,7 +106,7 @@ public:
 
         Vector3d p = inter.p_;
         Vector3d N = inter.normal_;
-        Vector3d w_o = r.direction();
+        Vector3d w_o = -r.direction();
 
         Vector3d L_dir{0, 0, 0}, L_indir{0, 0, 0};
         // TO DO: sample from light
@@ -113,13 +115,12 @@ public:
         if (TrRandom::Double() <= russian_roulette) {
             Vector3d w_i = inter.material_->Sample(w_o, N);
             Ray next_ray(p, w_i);
-
             Intersection next_inter = bvh.CheckIntersect(next_ray, 0.001, infinity);
-            if (next_inter.happened_ && !next_inter.material_->HasEmission) {
-                double pdf = inter.material_->Pdf(w_o, w_i, N);
+            if (next_inter.happened_ && !next_inter.material_->HasEmission()) {
+                double pdf = inter.material_->Pdf(w_i, w_o, N) + 1e-2;
                 if (pdf > eps) {
-                    Vector3d
-                    L_indir = CastRay(next_ray, bvh, depth + 1) * fr * DotProduct(w_i, N) / pdf / russian_roulette;
+                    Vector3d fr = inter.material_->Eval(w_i, w_o, N);
+                    L_indir = HadamardProduct(CastRay(next_ray, bvh, depth + 1), fr) * DotProduct(w_i, N) / pdf / russian_roulette;
                 }
             }
         }
@@ -132,8 +133,6 @@ private:
     int image_height_;
     int samples_per_pixel_;
     int max_depth_;
-
-    static const double russian_roulette = 0.8;
 };
 
 #endif

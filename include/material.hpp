@@ -6,11 +6,10 @@
 
 class Material {
 public:
-    enum MaterialType { kDIFFUSE }
-
+    enum MaterialType { kDIFFUSE };
+    
     Material() {}
-    Material(MaterialType type, Vector3d kd, Vector3d ks, Vector3d ke, double ior)
-        : type_(type), k_diffuse_(kd), k_specular_(ks), k_emission_(ke), index_of_refraction_(ior) {}
+    Material(MaterialType type, Vector3d kd, Vector3d ks, Vector3d ke, double ior) : type_(type), k_diffuse_(kd), k_specular_(ks), k_emission_(ke), index_of_refraction_(ior) {}
 
     bool HasEmission() const { return Length(k_emission_) > eps; }
 
@@ -48,7 +47,7 @@ private:
     }
 };
 
-Vector3d Material::Eval(const Vector3d &in_dir, const Vector3d &out_dir, const Vector3d &normal) {
+Vector3d Material::Eval(const Vector3d &in_dir, const Vector3d &out_dir, const Vector3d &normal) const {
     switch (type_) {
     case kDIFFUSE: {
         double cosTheta = DotProduct(normal, out_dir);
@@ -75,7 +74,7 @@ double Material::Pdf(const Vector3d &in_dir, const Vector3d &out_dir, const Vect
     switch (type_) {
     case kDIFFUSE: {
         // For diffuse material, the probability equal to 1 / (2 * PI).
-        if (DotProduct(out_dir, N) > 0.0) {
+        if (DotProduct(out_dir, normal) > 0.0) {
             return 0.5 / pi;
         } else {
             return 0.0;
