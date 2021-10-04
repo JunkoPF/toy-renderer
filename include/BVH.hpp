@@ -12,16 +12,15 @@ namespace Bvh {
 class BvhNode;
 
 using NodePtrType = shared_ptr<BvhNode>;
-using ObjectPtrType = shared_ptr<Object>;
 
 class BvhNode {
 
 public:
     BvhNode();
 
-    BvhNode(const ObjectList &list) : BvhNode(list.objects_, 0, list.objects_.size()) {}
+    BvhNode(const ObjectListType &list, size_t begin_index, size_t end_index);
 
-    BvhNode(const std::vector<ObjectPtrType> &objects, size_t begin_index, size_t end_index);
+    BvhNode(const ObjectListType &list) : BvhNode(list, 0, list.size()) {}
 
     const BoundingBox &GetBox() const { return box_; }
     bool IsLeaf() const { return object_ != nullptr; }
@@ -33,8 +32,8 @@ public:
     BoundingBox box_;
 };
 
-BvhNode::BvhNode(const std::vector<ObjectPtrType> &objects, size_t begin_index, size_t end_index) {
-    std::vector<ObjectPtrType> tmp_objects(objects);
+BvhNode::BvhNode(const ObjectListType &objects, size_t begin_index, size_t end_index) {
+    ObjectListType tmp_objects(objects);
     size_t num_objects = end_index - begin_index;
     assert(num_objects > 0);
 
@@ -69,7 +68,7 @@ class BvhTree {
 public:
     BvhTree(){};
 
-    BvhTree(const ObjectList &objects) {
+    BvhTree(const ObjectListType &objects) {
         root_ = make_shared<BvhNode>(objects);
     };
 

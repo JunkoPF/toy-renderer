@@ -29,16 +29,16 @@ int main() {
     auto light = make_shared<Material>(Material::kDIFFUSE, Vector3d(0.725, 0.71, 0.68), Vector3d(0, 0, 0),
                                        (8.0 * Vector3d(0.747 + 0.058, 0.747 + 0.258, 0.747) + 15.6 * Vector3d(0.740 + 0.287, 0.740 + 0.160, 0.740) + 18.4 * Vector3d(0.737 + 0.642, 0.737 + 0.159, 0.737)), 0.0);
 
-    auto list = LoadObjModel("/home/polyethylene/toyRenderer/asset/cornellbox/floor.obj", white);
-    auto tmp = LoadObjModel("/home/polyethylene/toyRenderer/asset/cornellbox/left.obj", red);
+    auto list = LoadObjectModel("/home/polyethylene/toyRenderer/asset/cornellbox/floor.obj", white);
+    auto tmp = LoadObjectModel("/home/polyethylene/toyRenderer/asset/cornellbox/left.obj", red);
     list.insert(list.end(), tmp.begin(), tmp.end());
-    tmp = LoadObjModel("/home/polyethylene/toyRenderer/asset/cornellbox/right.obj", green);
+    tmp = LoadObjectModel("/home/polyethylene/toyRenderer/asset/cornellbox/right.obj", green);
     list.insert(list.end(), tmp.begin(), tmp.end());
-    tmp = LoadObjModel("/home/polyethylene/toyRenderer/asset/cornellbox/shortbox.obj", white);
+    tmp = LoadObjectModel("/home/polyethylene/toyRenderer/asset/cornellbox/shortbox.obj", white);
     list.insert(list.end(), tmp.begin(), tmp.end());
-    tmp = LoadObjModel("/home/polyethylene/toyRenderer/asset/cornellbox/tallbox.obj", white);
+    tmp = LoadObjectModel("/home/polyethylene/toyRenderer/asset/cornellbox/tallbox.obj", white);
     list.insert(list.end(), tmp.begin(), tmp.end());
-    tmp = LoadObjModel("/home/polyethylene/toyRenderer/asset/cornellbox/light.obj", light);
+    tmp = LoadObjectModel("/home/polyethylene/toyRenderer/asset/cornellbox/light.obj", light);
     list.insert(list.end(), tmp.begin(), tmp.end());
 
     for (auto &elem : list) {

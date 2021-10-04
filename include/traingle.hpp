@@ -19,11 +19,16 @@ public:
         : vertex_coords_({v0, v1, v2}), material_(m) {
         edges_[0] = v1 - v0;
         edges_[1] = v2 - v0;
-        normal_ = Normalize(CrossProduct(edges_[0], edges_[1]));
+
+        Vector3d tmp = CrossProduct(edges_[0], edges_[1]);
+        normal_ = Normalize(tmp);
+        surface_area_ = 0.5 * Length(tmp);
     }
 
     virtual Intersection Intersect(const Ray &r, double t_min, double t_max) const override;
     virtual BoundingBox GetBoundingBox() const override;
+
+    virtual double GetArea() const override { return surface_area_; }
 
 private:
     std::array<Point3d, 3> vertex_coords_;
@@ -31,6 +36,8 @@ private:
     std::array<Point3d, 3> texture_coords_;
     shared_ptr<Material> material_;
     Vector3d normal_;
+
+    double surface_area_;
 };
 
 Intersection Triangle::Intersect(const Ray &r, double t_min, double t_max) const {
@@ -71,6 +78,8 @@ public:
         Vector3d min_vertex = Vector3d{infinity, infinity, infinity};
         Vector3d max_vertex = Vector3d{-infinity, -infinity, -infinity};
 
+        surface_area_ = 0.0;
+
         for (int i = 0; i < mesh.Vertices.size(); i += 3) {
             std::array<Vector3d, 3> face_vertices;
             for (int j = 0; j < 3; ++j) {
@@ -83,29 +92,29 @@ public:
                 max_vertex = Vector3d(fmax(max_vertex.x(), vertex.x()), fmax(max_vertex.y(), vertex.y()), fmax(max_vertex.z(), vertex.z()));
             }
 
-            triangles_.emplace_back(make_shared<Triangle>(face_vertices[0], face_vertices[1], face_vertices[2], material));
+            auto triangle_ptr = make_shared<Triangle>(face_vertices[0], face_vertices[1], face_vertices[2], material);
+            surface_area_ += triangle_ptr->GetArea();
+            triangles_.emplace_back(triangle_ptr);
         }
 
         box_ = BoundingBox(min_vertex, max_vertex);
 
-        ObjectList list;
-
-        for (auto &tri : triangles_) {
-            list.add(tri);
-        }
-
-        bvh_tree_ = Bvh::BvhTree(list);
+        bvh_tree_ = Bvh::BvhTree(triangles_);
     }
 
     virtual Intersection Intersect(const Ray &r, double t_min, double t_max) const override;
     virtual BoundingBox GetBoundingBox() const override;
 
+    virtual double GetArea() const override { return surface_area_; }
+
 public:
-    std::vector<shared_ptr<Triangle>> triangles_;
+    ObjectListType triangles_;
 
     BoundingBox box_;
 
     Bvh::BvhTree bvh_tree_;
+
+    double surface_area_;
 };
 
 Intersection MeshTriangle::Intersect(const Ray &r, double t_min, double t_max) const {
@@ -116,12 +125,12 @@ BoundingBox MeshTriangle::GetBoundingBox() const {
     return box_;
 };
 
-std::vector<shared_ptr<MeshTriangle>> LoadObjModel(std::string filename, shared_ptr<Material> material) {
+ObjectListType LoadObjectModel(std::string filename, shared_ptr<Material> material) {
     objl::Loader loader;
     loader.LoadFile(filename);
     auto meshes = loader.LoadedMeshes;
 
-    std::vector<shared_ptr<MeshTriangle>> mesh_list;
+    ObjectListType mesh_list;
 
     for (auto &mesh : meshes) {
         mesh_list.emplace_back(make_shared<MeshTriangle>(mesh, material));

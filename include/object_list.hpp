@@ -1,3 +1,4 @@
+/*
 #ifndef OBJECT_LIST_H
 #define OBJECT_LIST_H
 
@@ -53,3 +54,4 @@ BoundingBox ObjectList::GetBoundingBox() const {
 }
 
 #endif
+*/

@@ -7,13 +7,18 @@
 #include "renderer.hpp"
 
 class Scene {
+
 public:
     Scene() {}
     Scene(Camera cam) : camera_(cam), initialized_(false) {}
 
-    void AddObject(shared_ptr<Object> object_ptr) {
-        list_.add(object_ptr);
+    void AddObject(const ObjectPtrType &object_ptr) {
+        list_.emplace_back(object_ptr);
         initialized_ = false;
+    }
+
+    void AddObject(const ObjectListType &object_list) {
+        list_.insert(list_.end(), object_list.begin(), object_list.end());
     }
 
     void Render(std::ostream &os, const Renderer &renderer) {
@@ -37,7 +42,7 @@ public:
     }
 
 public:
-    ObjectList list_;
+    ObjectListType list_;
     Bvh::BvhTree bvh_tree_;
     Camera camera_;
     bool initialized_;

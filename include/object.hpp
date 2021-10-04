@@ -27,6 +27,10 @@ class Object {
 public:
     virtual Intersection Intersect(const Ray &r, double t_min, double t_max) const = 0;
     virtual BoundingBox GetBoundingBox() const = 0;
+    virtual double GetArea() const = 0;
 };
+
+using ObjectPtrType = std::shared_ptr<Object>;
+using ObjectListType = std::vector<ObjectPtrType>;
 
 #endif
