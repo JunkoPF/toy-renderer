@@ -54,11 +54,11 @@ int main() {
     Camera cam(view_point, look_at_point, Vector3d(0, 1, 0), 50.0, aspect_ratio, 0.035, 0.0);
 
     scene.SetCamera(cam);
-
+    scene.InitializeBvh();
     // Render
 
-    Renderer renderer(400, aspect_ratio, 10, 50);
-    scene.Render(std::cout, renderer);
+    Renderer renderer(400, aspect_ratio, 256, 0);
+    renderer.Render(std::cout, scene);
 
     std::cerr << "\nDone.\n";
     return 0;

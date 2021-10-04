@@ -23,13 +23,13 @@ public:
     BvhNode(const ObjectListType &list) : BvhNode(list, 0, list.size()) {}
 
     const BoundingBox &GetBox() const { return box_; }
-    bool IsLeaf() const { return object_ != nullptr; }
 
 public:
     NodePtrType left_;
     NodePtrType right_;
     ObjectPtrType object_;
     BoundingBox box_;
+    double area_;
 };
 
 BvhNode::BvhNode(const ObjectListType &objects, size_t begin_index, size_t end_index) {
@@ -39,6 +39,8 @@ BvhNode::BvhNode(const ObjectListType &objects, size_t begin_index, size_t end_i
 
     if (num_objects == 1) {
         object_ = objects[begin_index];
+        area_ = object_->GetArea();
+        box_ = object_->GetBoundingBox();
     } else {
         BoundingBox centroid_box(objects[begin_index]->GetBoundingBox().Centroid());
         for (int i = begin_index + 1; i < end_index; ++i) {
@@ -55,12 +57,9 @@ BvhNode::BvhNode(const ObjectListType &objects, size_t begin_index, size_t end_i
         size_t mid = begin_index + num_objects / 2;
         left_ = make_shared<BvhNode>(objects, begin_index, mid);
         right_ = make_shared<BvhNode>(objects, mid, end_index);
-    }
 
-    if (num_objects == 1) {
-        box_ = object_->GetBoundingBox();
-    } else {
         box_ = MergeBoxes(left_->box_, right_->box_);
+        area_ = left_->area_ + right_->area_;
     }
 }
 
@@ -73,6 +72,8 @@ public:
     };
 
     Intersection CheckIntersect(const Ray &r, double t_min, double t_max) const;
+
+    void Sample(Intersection &inter, double pdf) const;
 
 public:
     NodePtrType root_;
@@ -105,5 +106,26 @@ Intersection BvhTree::CheckIntersect(const Ray &r, double t_min, double t_max) c
     }
     return ret_intersection;
 }
+
+void BvhTree::Sample(Intersection &inter, double pdf) const {
+    double tmp_p = std::sqrt(TrRandom::Double()) * root_->area_;
+    NodePtrType tmp_node = root_;
+    while (tmp_node) {
+        if (tmp_node->object_) {
+            tmp_node->object_->Sample(inter, pdf);
+            pdf *= tmp_node->area_;
+            return;
+        } else {
+            if (tmp_node->left_->area_ < tmp_p) {
+                tmp_node = tmp_node->left_;
+            } else {
+                tmp_p -= tmp_node->left_->area_;
+                tmp_node = tmp_node->right_;
+            }
+        }
+    }
+    pdf /= root_->area_;
+}
+
 } // namespace Bvh
 #endif

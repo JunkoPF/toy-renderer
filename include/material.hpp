@@ -7,7 +7,7 @@
 class Material {
 public:
     enum MaterialType { kDIFFUSE };
-    
+
     Material() {}
     Material(MaterialType type, Vector3d kd, Vector3d ks, Vector3d ke, double ior) : type_(type), k_diffuse_(kd), k_specular_(ks), k_emission_(ke), index_of_refraction_(ior) {}
 
@@ -35,7 +35,7 @@ private:
     static inline Vector3d refract(const Vector3d &in_dir, const Vector3d &normal, double refract_ratio) {
         double cos_theta = DotProduct(in_dir, -normal);
         Vector3d r_out_perp = refract_ratio * (in_dir + cos_theta * normal);
-        Vector3d r_out_vert = -sqrt(1 - LengthSquared(r_out_perp)) * normal;
+        Vector3d r_out_vert = -std::sqrt(1 - LengthSquared(r_out_perp)) * normal;
         return r_out_perp + r_out_vert;
     }
 
@@ -83,5 +83,7 @@ double Material::Pdf(const Vector3d &in_dir, const Vector3d &out_dir, const Vect
     }
     return 0;
 }
+
+using MaterialPtrType = shared_ptr<Material>;
 
 #endif

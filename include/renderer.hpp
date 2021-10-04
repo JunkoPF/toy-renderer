@@ -4,10 +4,10 @@
 #include <mutex>
 #include <thread>
 
-#include "BVH.hpp"
 #include "base.hpp"
 #include "camera.hpp"
 #include "material.hpp"
+#include "scene.hpp"
 
 std::mutex mutex_ins;
 
@@ -40,7 +40,7 @@ public:
     }
 */
 
-    void Render(std::ostream &os, const Camera &cam, const Bvh::BvhTree bvh_tree) const {
+    void Render(std::ostream &os, Scene &scene) const {
         std::vector<Color3d> frame_buffer(image_width_ * image_height_);
 
         int cnt = 0;
@@ -52,8 +52,8 @@ public:
                     for (int s = 0; s < samples_per_pixel_; ++s) {
                         auto u = (y + TrRandom::Double()) / (image_width_ - 1);
                         auto v = (x + TrRandom::Double()) / (image_height_ - 1);
-                        Ray r = cam.GetRay(u, v);
-                        pixel_color += CastRay(r, bvh_tree, max_depth_);
+                        Ray r = scene.camera_.GetRay(u, v);
+                        pixel_color += CastRay(r, scene, max_depth_);
                     }
                     frame_buffer[x * image_width_ + y] = pixel_color;
                 }
@@ -90,10 +90,10 @@ public:
         }
     }
 
-    Color3d CastRay(const Ray &r, const Bvh::BvhTree &bvh, int depth) const {
+    Color3d CastRay(const Ray &r, Scene &scene, int depth) const {
         Intersection inter;
 
-        inter = bvh.CheckIntersect(r, 0.001, infinity);
+        inter = scene.bvh_tree_.CheckIntersect(r, 0.001, infinity);
 
         if (!inter.happened_) {
             return {0, 0, 0};
@@ -104,23 +104,39 @@ public:
             return inter.material_->GetEmission();
         }
 
+        Vector3d L_dir{0, 0, 0}, L_indir{0, 0, 0};
+
+        // TO DO: sample from light
+        Intersection inter_light;
+        double pdf_light = 0.0;
+        scene.SampleLight(inter_light, pdf_light);
+
         Vector3d p = inter.p_;
         Vector3d N = inter.normal_;
         Vector3d w_o = -r.direction();
 
-        Vector3d L_dir{0, 0, 0}, L_indir{0, 0, 0};
-        // TO DO: sample from light
+        Vector3d x = inter_light.p_;
+        Vector3d NN = inter_light.normal_;
+
+        Ray ligth_sample(p, Normalize(x - p));
+        Intersection light_inter = scene.bvh_tree_.CheckIntersect(ligth_sample, 0.001, infinity);
+        if (light_inter.happened_ && Length(light_inter.p_ - x) < 1e-2 && light_inter.material_->HasEmission()) {
+            Vector3d w_s = Normalize(x - p);
+            Vector3d fr = inter.material_->Eval(w_o, w_s, N);
+            double dis = LengthSquared(x - p);
+            L_dir = HadamardProduct(light_inter.material_->GetEmission(), fr) * DotProduct(w_s, N) * DotProduct(-w_s, NN) / dis / pdf_light;
+        }
 
         // Russian Roulette
         if (TrRandom::Double() <= russian_roulette) {
             Vector3d w_i = inter.material_->Sample(w_o, N);
             Ray next_ray(p, w_i);
-            Intersection next_inter = bvh.CheckIntersect(next_ray, 0.001, infinity);
+            Intersection next_inter = scene.bvh_tree_.CheckIntersect(next_ray, 0.001, infinity);
             if (next_inter.happened_ && !next_inter.material_->HasEmission()) {
                 double pdf = inter.material_->Pdf(w_i, w_o, N) + 1e-2;
                 if (pdf > eps) {
                     Vector3d fr = inter.material_->Eval(w_i, w_o, N);
-                    L_indir = HadamardProduct(CastRay(next_ray, bvh, depth + 1), fr) * DotProduct(w_i, N) / pdf / russian_roulette;
+                    L_indir = HadamardProduct(CastRay(next_ray, scene, depth + 1), fr) * DotProduct(w_i, N) / pdf / russian_roulette;
                 }
             }
         }

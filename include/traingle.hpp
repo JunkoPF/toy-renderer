@@ -27,8 +27,10 @@ public:
 
     virtual Intersection Intersect(const Ray &r, double t_min, double t_max) const override;
     virtual BoundingBox GetBoundingBox() const override;
+    virtual void Sample(Intersection &inter, double &pdf) const override;
 
     virtual double GetArea() const override { return surface_area_; }
+    virtual MaterialPtrType GetMaterial() const override { return material_; }
 
 private:
     std::array<Point3d, 3> vertex_coords_;
@@ -72,9 +74,16 @@ BoundingBox Triangle::GetBoundingBox() const {
     return MergeBoxes(BoundingBox(vertex_coords_[0], vertex_coords_[1]), BoundingBox(vertex_coords_[2]));
 }
 
+void Triangle::Sample(Intersection &inter, double &pdf) const {
+    double x = std::sqrt(TrRandom::Double()), y = TrRandom::Double();
+    inter.p_ = vertex_coords_[0] * (1.0 - x) + vertex_coords_[1] * (x * (1.0 - y)) + vertex_coords_[2] * (x * y);
+    inter.normal_ = normal_;
+    pdf = 1.0 / surface_area_;
+}
+
 class MeshTriangle : public Object {
 public:
-    MeshTriangle(const objl::Mesh &mesh, shared_ptr<Material> material) {
+    MeshTriangle(const objl::Mesh &mesh, shared_ptr<Material> material) : material_(material) {
         Vector3d min_vertex = Vector3d{infinity, infinity, infinity};
         Vector3d max_vertex = Vector3d{-infinity, -infinity, -infinity};
 
@@ -104,8 +113,10 @@ public:
 
     virtual Intersection Intersect(const Ray &r, double t_min, double t_max) const override;
     virtual BoundingBox GetBoundingBox() const override;
+    virtual void Sample(Intersection &inter, double &pdf) const override;
 
     virtual double GetArea() const override { return surface_area_; }
+    virtual MaterialPtrType GetMaterial() const override { return material_; }
 
 public:
     ObjectListType triangles_;
@@ -115,15 +126,29 @@ public:
     Bvh::BvhTree bvh_tree_;
 
     double surface_area_;
+
+    MaterialPtrType material_;
 };
 
 Intersection MeshTriangle::Intersect(const Ray &r, double t_min, double t_max) const {
     return bvh_tree_.CheckIntersect(r, t_min, t_max);
-};
+}
 
 BoundingBox MeshTriangle::GetBoundingBox() const {
     return box_;
-};
+}
+
+void MeshTriangle::Sample(Intersection &inter, double &pdf) const {
+    //bvh_tree_.Sample(inter, pdf);
+    double tmp_p = TrRandom::Double() * GetArea();
+    for (const auto &tri : triangles_) {
+        if (tri->GetArea() > tmp_p) {
+            tri->Sample(inter, pdf);
+            return;
+        }
+        tmp_p -= tri->GetArea();
+    }
+}
 
 ObjectListType LoadObjectModel(std::string filename, shared_ptr<Material> material) {
     objl::Loader loader;
