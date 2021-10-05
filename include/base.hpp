@@ -44,6 +44,29 @@ inline bool nearzero(const Vector3d &vec) {
     return (fabs(vec.x()) < eps) && (fabs(vec.y()) < eps) && (fabs(vec.z()) < eps);
 }
 
+inline Vector3d Lerp(const Vector3d &lhs, const Vector3d &rhs, double k) {
+    return k * lhs + (1 - k) * rhs;
+}
+
+inline Vector3d UnitVec3d(const double &theta, const double &rho) {
+    double sin_theta = sin(theta);
+    double cos_theta = cos(theta);
+    double sin_rho = sin(rho);
+    double cos_rho = cos(rho);
+    return Vector3d(sin_theta * cos_rho, sin_theta * sin_rho, cos_theta);
+}
+
+inline Vector3d TangentToWorld(const Vector3d &vec, const Vector3d &N) {
+    Vector3d B, C;
+    if (fabs(N.x()) > fabs(N.y())) {
+        C = Normalize(Vector3d(N.z(), 0.0, -N.x()));
+    } else {
+        C = Normalize(Vector3d(0.0, N.z(), -N.y()));
+    }
+    B = CrossProduct(C, N);
+    return vec.x() * B + vec.y() * C + vec.z() * N;
+}
+
 // random function
 
 namespace TrRandom {

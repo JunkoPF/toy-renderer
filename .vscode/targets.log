@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Oct  4 19:56:15 2021
+# Make data base, printed on Tue Oct  5 12:29:57 2021
 
 # Variables
 
@@ -61,7 +61,7 @@ NVM_BIN = /home/polyethylene/.nvm/versions/node/v14.17.0/bin
 # environment
 VSCODE_LOG_STACK = false
 # environment
-VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-183c8fcb-8297-437b-bae4-32c75e04da4a.sock
+VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-a903462a-c051-44a5-ac59-d6026700ca60.sock
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -69,7 +69,7 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # automatic
 %F = $(notdir $%)
 # environment
-DISPLAY = 192.168.164.225:0
+DISPLAY = 172.17.163.177:0
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
@@ -177,9 +177,9 @@ WSL_DISTRO_NAME = Ubuntu-20.04
 
 # Directories
 
-# . (device 2064, inode 92748): 14 files, no impossibilities.
+# . (device 2064, inode 92748): 15 files, no impossibilities.
 
-# 14 files, no impossibilities in 1 directories.
+# 15 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -229,12 +229,12 @@ main: src/main.cpp
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 21 / storage = 182 B / avg = 8 B
-# current buf: size = 8162 B / used = 182 B / count = 21 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 22 / storage = 215 B / avg = 9 B
+# current buf: size = 8162 B / used = 215 B / count = 22 / avg = 9 B
 
-# strcache performance: lookups = 26 / hit rate = 19%
+# strcache performance: lookups = 27 / hit rate = 18%
 # hash-table stats:
-# Load=21/8192=0%, Rehash=0, Collisions=1/26=4%
-# Finished Make data base on Mon Oct  4 19:56:15 2021
+# Load=22/8192=0%, Rehash=0, Collisions=1/27=4%
+# Finished Make data base on Tue Oct  5 12:29:57 2021
 
  

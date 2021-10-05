@@ -26,6 +26,8 @@ int main() {
     auto green = make_shared<Material>(Material::kDIFFUSE, Vector3d(0.14, 0.45, 0.091), Vector3d(0, 0, 0), Vector3d(0, 0, 0), 0.0);
     auto white = make_shared<Material>(Material::kDIFFUSE, Vector3d(0.725, 0.71, 0.68), Vector3d(0, 0, 0), Vector3d(0, 0, 0), 0.0);
 
+    auto white_metal = make_shared<Material>(Material::kMICROFACET, Vector3d(0.725, 0.71, 0.68), Vector3d(0, 0, 0), Vector3d(0, 0, 0), 0.0, 0.1, 0.8);
+
     auto light = make_shared<Material>(Material::kDIFFUSE, Vector3d(0.725, 0.71, 0.68), Vector3d(0, 0, 0),
                                        (8.0 * Vector3d(0.747 + 0.058, 0.747 + 0.258, 0.747) + 15.6 * Vector3d(0.740 + 0.287, 0.740 + 0.160, 0.740) + 18.4 * Vector3d(0.737 + 0.642, 0.737 + 0.159, 0.737)), 0.0);
 
@@ -36,7 +38,7 @@ int main() {
     list.insert(list.end(), tmp.begin(), tmp.end());
     tmp = LoadObjectModel("/home/polyethylene/toyRenderer/asset/cornellbox/shortbox.obj", white);
     list.insert(list.end(), tmp.begin(), tmp.end());
-    tmp = LoadObjectModel("/home/polyethylene/toyRenderer/asset/cornellbox/tallbox.obj", white);
+    tmp = LoadObjectModel("/home/polyethylene/toyRenderer/asset/cornellbox/tallbox.obj", white_metal);
     list.insert(list.end(), tmp.begin(), tmp.end());
     tmp = LoadObjectModel("/home/polyethylene/toyRenderer/asset/cornellbox/light.obj", light);
     list.insert(list.end(), tmp.begin(), tmp.end());
@@ -57,7 +59,7 @@ int main() {
     scene.InitializeBvh();
     // Render
 
-    Renderer renderer(400, aspect_ratio, 256, 0);
+    Renderer renderer(400, aspect_ratio, 64, 0);
     renderer.Render(std::cout, scene);
 
     std::cerr << "\nDone.\n";
