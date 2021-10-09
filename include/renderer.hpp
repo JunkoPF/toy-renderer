@@ -120,11 +120,16 @@ public:
 
         Ray ligth_sample(p, Normalize(x - p));
         Intersection light_inter = scene.bvh_tree_.CheckIntersect(ligth_sample, 0.001, infinity);
-        if (light_inter.happened_ && Length(light_inter.p_ - x) < 1e-2 && light_inter.material_->HasEmission()) {
+        if (light_inter.happened_ && Length(light_inter.p_ - x) < eps && light_inter.material_->HasEmission()) {
             Vector3d w_s = Normalize(x - p);
             Vector3d fr = inter.material_->Eval(w_o, w_s, N);
             double dis = LengthSquared(x - p);
-            L_dir = HadamardProduct(light_inter.material_->GetEmission(), fr) * DotProduct(w_s, N) * DotProduct(-w_s, NN) / dis / pdf_light;
+            double cos_theta_1 = DotProduct(w_s, N);
+            double cos_theta_2 = DotProduct(-w_s, NN);
+            if (cos_theta_1 * cos_theta_2 >= 0) {
+                L_dir = HadamardProduct(light_inter.material_->GetEmission(), fr) * cos_theta_1 * cos_theta_2 / dis / pdf_light;
+            }
+            assert(L_dir.x() >= 0 && L_dir.y() >= 0 && L_dir.z() >= 0);
         }
 
         // Russian Roulette
@@ -133,14 +138,14 @@ public:
             Ray next_ray(p, w_i);
             Intersection next_inter = scene.bvh_tree_.CheckIntersect(next_ray, 0.001, infinity);
             if (next_inter.happened_ && !next_inter.material_->HasEmission()) {
-                double pdf = inter.material_->Pdf(w_i, w_o, N) + 1e-2;
+                double pdf = inter.material_->Pdf(w_i, w_o, N) + eps;
                 if (pdf > eps) {
                     Vector3d fr = inter.material_->Eval(w_i, w_o, N);
                     L_indir = HadamardProduct(CastRay(next_ray, scene, depth + 1), fr) * DotProduct(w_i, N) / pdf / russian_roulette;
+                    assert(L_indir.x() >= 0 && L_indir.y() >= 0 && L_indir.z() >= 0);
                 }
             }
         }
-
         return L_dir + L_indir;
     }
 
